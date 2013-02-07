@@ -1,0 +1,7 @@
+https://data.sfgov.org/Public-Safety/Map-Crime-Incidents-Previous-Month/gxxq-x39z
+This dataset is a csv file with the details about all the crimes that have taken place in the past month in San Francisco. The current dataset has 9765 records. This dataset has information like the type of crime that has taken place, the location where the incident has taken place and the date and time at which the incident has taken place. I find this data interesting because it will help in analyzing and determining useful information like the location where the maximum crimes take place and the day / time during which maximum crimes take place. 
+Some questions that can be answered using this data set are:
+1)	In which location has the maximum number of crimes taken place?
+2)	What type of crime is most common in San Francisco?
+3)	Which day of the week (or time of the day) is relatively unsafe in San Francisco?
+
