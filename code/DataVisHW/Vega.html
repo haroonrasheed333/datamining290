@@ -1,0 +1,130 @@
+<html>
+<head>
+  <title>Vega Plot</title>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://trifacta.github.io/vega/vega.js"></script>
+  <style>
+  body { font-family: Helvetica; }
+  </style>
+</head>
+<body>
+    <p><strong>Vega Plot for Yelp Dataset. Each line represents a Restaurant Category ('French', 'Chinese', 'Italian', 'Mexican', 'Mediterranean', 'American (New)', 'Indian', 'Thai', 'Japanese'). This plot shows the change in average star rating for these nine categories over the year 2012. X-axis is the Month and Y-axis is the average star rating. Hover ever each line to highlight a particular category.</strong></p>
+    <div id="visualize"></div>
+</body>
+<script type="text/javascript">
+function parse(spec) {
+  vg.parse.spec(spec, function(chart) {
+    var view = chart({ el:"#visualize" });
+    view.viewport(null)
+        .renderer("svg")
+        .on("mouseover", function(event, item) {
+        view.update({
+          props: "hover",
+          items: item.cousin(1)
+        });
+      })
+      .on("mouseout", function(event, item) {
+        view.update({
+          props: "update",
+          items: item.cousin(1)
+        });
+      })    
+      .update();
+    });
+  }
+
+  parse({
+  "width": 900,
+  "height": 500,
+  "padding": {"top": 10, "left": 40, "bottom": 20, "right": 40},
+  "data": [
+    {
+      "name": "yelp",
+      "url": "data.csv",
+      "format": {"type": "csv", "parse": {"avgStars": "number"}}
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "ordinal",
+      "range": "width",
+      "domain": {"data": "yelp", "field": "data.month"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "domain": {"data": "yelp", "field": "data.avgStars"}
+    },
+    {
+      "name": "color", "type": "ordinal", "range": "category10"
+    }
+  ],
+  "axes": [
+    {"type": "x", "scale": "x", "tickSizeEnd": 0, "values": ["Jan 2012", "Feb 2102", "Mar  2102", "Apr  2102", "May  2102", "Jun  2102", "Jul  2102", "Aug  2102", "Sep  2102", "Oct  2102", "Nov  2102", "Dec  2102"]},
+    {"type": "y", "scale": "y"}
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "from": {
+        "data": "yelp",
+        "transform": [{"type": "facet", "keys": ["data.category"]}]
+      },
+      "marks": [
+        {
+          "type": "line",
+          "properties": {
+            "enter": {
+              "x": {"scale": "x", "field": "data.month"},
+              "y": {"scale": "y", "field": "data.avgStars"},
+              "stroke": {"scale": "color", "field": "data.category"},
+              "strokeWidth": {"value": 1.5},
+              "opacity": {"field": "category"},
+            },
+            "update": {
+              "opacity": {"field": "category"},
+              "stroke": {"scale": "color", "field": "data.category"},             
+              "strokeWidth": {"value": 1.5}                
+            },
+            "hover": {
+              "opacity": {"value": 2},
+              "stroke" : {"scale": "color", "field": "data.category"},
+              "strokeWidth": {"value": 5},
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "yelp",
+        "transform": [
+          {"type": "filter", "test": "d.data.month == 'Dec'"}
+        ]
+      },
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.month", "offset": 3},
+          "y": {"scale": "y", "field": "data.avgStars"},
+          "fill": {"scale": "color", "field": "data.category"},
+          "text": {"field": "data.category"},
+          "fontSize": {"value": 14},
+          "baseline": {"value": "middle"},
+          "opacity": {"value": 2}
+        },
+        "hover": {
+          "opacity": {"value": 2}
+        },
+        "update": {
+          "opacity": {"value": 2}
+        }
+      }
+    }
+  ]
+});
+  </script>
+</html>
